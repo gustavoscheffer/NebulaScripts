@@ -43,7 +43,6 @@ vm_pool.each do |vm|
     #get info about vm
      vm.info
     if vm.name.to_s == VMTODELETE
-
        #delete vm
        rc = vm.delete
        if OpenNebula.is_error?(rc)
