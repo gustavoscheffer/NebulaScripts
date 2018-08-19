@@ -1,6 +1,16 @@
 #!/usr/bin/env ruby
 
 ##############################################################################
+# Paramentros de Entrada
+##############################################################################
+
+MET_CPU_MAX  = 0 # # treshold maxio de cpu
+MET_MEMORY_MAX = 0 # # treshold maximo de memoria
+MET_CPU_MIN  = 0 # treshold minimo de cpu
+MET_MEMORY_MIN = 0 # treshold minimo de memoria
+MET_VMS ="teste-" # nome dos hosts a serem monitorados pelo verticalelastic
+
+##############################################################################
 # Environment Configuration
 ##############################################################################
 ONE_LOCATION=ENV["ONE_LOCATION"]
@@ -27,11 +37,6 @@ ENDPOINT    = "http://localhost:2633/RPC2"
 
 client = Client.new(CREDENTIALS, ENDPOINT)
 
-#PARAMETROS
-MET_CPU  = 0;
-MET_MEMORY = 0;
-MET_VMS ="teste-";
-
 #1) Pegar lista de máquinas existentes;
 vm_pool = VirtualMachinePool.new(client, -1)
 
@@ -42,22 +47,24 @@ if OpenNebula.is_error?(rc)
      exit -1
 end
 
-#2) Filtrar as máquinas pelo nome e montar uma nova lista;
-
 # novo array para guardar as vms filtradas
 vms_filtradas = Array.new
 
+#2) Filtrar as máquinas pelo nome e montar uma nova lista;
 vm_pool.each do |vm|
   vm.info
   r = Regexp.new(MET_VMS)
-
   if (!r.match(vm.name.to_s).nil?)
-    vms_filtradas.push vm.name.to_s
+    vms_filtradas.push vm
   end
 end
 
-puts vms_filtradas
+#3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
+vms_filtradas.each do |vm|
+  puts vm.monitoring
+end
 
-#Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
-#Gerar uma nova máquina com 30%mais recurso de memória e/ou mais 1 cpu;
-#Excluir a máquina antiga;
+
+#4) Gerar uma nova máquina com 30%mais recurso de memória e/ou mais 1 cpu;
+
+#5) Excluir a máquina antiga;
