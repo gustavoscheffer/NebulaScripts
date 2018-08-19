@@ -52,13 +52,11 @@ vm_pool.each do |vm|
   r = Regexp.new(MET_VMS)
 
   if (!r.match(vm.name.to_s).nil?)
-    #puts vm.name.to_s
     vms_filtradas.push vm.name.to_s
-    puts vms_filtradas
-
   end
-
 end
+
+puts vms_filtradas
 
 #Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
 #Gerar uma nova máquina com 30%mais recurso de memória e/ou mais 1 cpu;
