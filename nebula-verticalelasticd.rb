@@ -43,13 +43,12 @@ if OpenNebula.is_error?(rc)
 end
 
 #2) Filtrar as máquinas pelo nome e montar uma nova lista;
-vm_pool.each do
-  vm_pool.info
-
+vm_pool.each do |vm|
+  vm.info
   r = Regexp.new(MET_VMS)
 
-  if (!r.match(vm_pool.vm.name.to_s).nil?)
-    puts vm_pool.name.to_s
+  if (!r.match(vm.name.to_s).nil?)
+    puts vm.name.to_s
   end
 
 end
