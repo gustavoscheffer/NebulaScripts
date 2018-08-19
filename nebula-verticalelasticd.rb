@@ -30,7 +30,7 @@ client = Client.new(CREDENTIALS, ENDPOINT)
 #PARAMETROS
 MET_CPU  = 0;
 MET_MEMORY = 0;
-MET_VMS ="";
+MET_VMS ="teste-";
 
 #1) Pegar lista de máquinas existentes;
 vm_pool = VirtualMachinePool.new(client, -1)
