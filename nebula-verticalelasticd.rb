@@ -1,16 +1,6 @@
 #!/usr/bin/env ruby
 
 ##############################################################################
-# Paramentros de Entrada
-##############################################################################
-
-MET_CPU_MAX  = 0 # # treshold maxio de cpu
-MET_MEMORY_MAX = 0 # # treshold maximo de memoria
-MET_CPU_MIN  = 0 # treshold minimo de cpu
-MET_MEMORY_MIN = 0 # treshold minimo de memoria
-MET_VMS ="teste-" # nome dos hosts a serem monitorados pelo verticalelastic
-
-##############################################################################
 # Environment Configuration
 ##############################################################################
 ONE_LOCATION=ENV["ONE_LOCATION"]
@@ -29,6 +19,17 @@ $: << RUBY_LIB_LOCATION
 require 'opennebula'
 
 include OpenNebula
+
+
+##############################################################################
+# Paramentros de Entrada
+##############################################################################
+
+MET_CPU_MAX  = 0 # # treshold maxio de cpu
+MET_MEMORY_MAX = 0 # # treshold maximo de memoria
+MET_CPU_MIN  = 0 # treshold minimo de cpu
+MET_MEMORY_MIN = 0 # treshold minimo de memoria
+MET_VMS ="teste-" # nome dos hosts a serem monitorados pelo verticalelastic
 
 # OpenNebula credentials
 CREDENTIALS = "oneadmin:opennebula"
@@ -60,8 +61,8 @@ vm_pool.each do |vm|
 end
 
 #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
-vms_filtradas.each do |vm|
-  puts vm.monitoring
+vms_filtradas.each do |vm_filtrada|
+  puts vm_filtrada.monitoring
 end
 
 
