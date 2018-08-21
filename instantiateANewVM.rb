@@ -55,7 +55,7 @@ xml = OpenNebula::VirtualMachine.build_xml
 vm  = OpenNebula::VirtualMachine.new(xml, client)
 
 # VirtualMachine new name
-NEWNAME = "teste-"
+NEWNAME = "angry-"
 
 # Creates a VirtualMachine and bring it up
 rc = vm.allocate(template)
@@ -70,15 +70,3 @@ else
     puts vm.state
 
 end
-
-
-
-# puts "Before info:"
-# puts vm.to_xml
-#
-# puts
-#
-# vm.info
-#
-# puts "After info:"
-# puts vm.to_xml

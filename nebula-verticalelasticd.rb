@@ -1,6 +1,31 @@
 #!/usr/bin/env ruby
 
 ##############################################################################
+# Paramentros de Entrada
+##############################################################################
+
+# treshold maximo de cpu
+MET_CPU_MAX  = 0
+
+# treshold maximo de memoria
+MET_MEMORY_MAX = 0 
+
+# treshold minimo de cpu
+MET_CPU_MIN  = 0 
+
+# treshold minimo de memoria
+MET_MEMORY_MIN = 0 
+
+# nome dos hosts a serem monitorados pelo verticalelastic
+MET_VMS ="angry-" 
+
+# OpenNebula credentials
+CREDENTIALS = "oneadmin:opennebula"
+
+# XML_RPC endpoint where OpenNebula is listening
+ENDPOINT    = "http://localhost:2633/RPC2"
+
+##############################################################################
 # Environment Configuration
 ##############################################################################
 ONE_LOCATION=ENV["ONE_LOCATION"]
@@ -20,21 +45,6 @@ require 'opennebula'
 
 include OpenNebula
 
-
-##############################################################################
-# Paramentros de Entrada
-##############################################################################
-
-MET_CPU_MAX  = 0 # # treshold maxio de cpu
-MET_MEMORY_MAX = 0 # # treshold maximo de memoria
-MET_CPU_MIN  = 0 # treshold minimo de cpu
-MET_MEMORY_MIN = 0 # treshold minimo de memoria
-MET_VMS ="teste-" # nome dos hosts a serem monitorados pelo verticalelastic
-
-# OpenNebula credentials
-CREDENTIALS = "oneadmin:opennebula"
-# XML_RPC endpoint where OpenNebula is listening
-ENDPOINT    = "http://localhost:2633/RPC2"
 
 client = Client.new(CREDENTIALS, ENDPOINT)
 
