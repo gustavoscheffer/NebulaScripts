@@ -78,7 +78,7 @@ vms_filtradas.each do |vm_filtrada|
   
   cpu_value = 0 
   cpu_metrics_by_vm.each do |metric|
-    puts metric
+    puts metric[1]
   end
 end
 
