@@ -81,7 +81,7 @@ end
 
 cpu_metrics_by_vm.each do |metric_by_vm|
   metric_by_vm.each do |metric|
-    puts metric[1]
+    puts metric
   end  
 end 
 
