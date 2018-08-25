@@ -80,7 +80,7 @@ vms_filtradas.each do |vm_filtrada|
 end
 
 cpu_metrics_by_vm.each do |metric_by_vm|
-  puts metric_by_vm[0]
+  puts metric_by_vm[1][1]
 end 
 
 #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
