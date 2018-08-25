@@ -17,7 +17,7 @@ MET_CPU_MIN  = 0
 MET_MEMORY_MIN = 0 
 
 # nome dos hosts a serem monitorados pelo verticalelastic
-MET_VMS ="angry-" 
+MET_VMS ="teste-" 
 
 # OpenNebula credentials
 CREDENTIALS = "oneadmin:opennebula"
