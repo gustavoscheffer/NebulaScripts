@@ -48,7 +48,7 @@ include OpenNebula
 
 client = Client.new(CREDENTIALS, ENDPOINT)
 
-#1) Pegar lista de máquinas existentes;
+# 1) Pegar lista de máquinas existentes;
 vm_pool = VirtualMachinePool.new(client, -1)
 
 #controla se houve erro na request
@@ -61,7 +61,7 @@ end
 # novo array para guardar as vms filtradas
 vms_filtradas = Array.new
 
-#2) Filtrar as máquinas pelo nome e montar uma nova lista;
+# 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 vm_pool.each do |vm|
   vm.info
   r = Regexp.new(MET_VMS)
@@ -79,6 +79,7 @@ vms_filtradas.each do |vm_filtrada|
   cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
 end
 
+#verifica mais metricas de cada vm
 cpu_metrics_by_vm.each do |metric_by_vm|
   metric_by_vm.each do |metric|
     puts metric
@@ -86,10 +87,6 @@ cpu_metrics_by_vm.each do |metric_by_vm|
 end 
 
 #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
-
-
-
-
 
 #4) Gerar uma nova máquina com 30%mais recurso de memória e/ou mais 1 cpu;
 
