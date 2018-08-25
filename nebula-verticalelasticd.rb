@@ -73,7 +73,7 @@ end
 #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
 vms_filtradas.each do |vm_filtrada|
   #puts vm_filtrada.monitoring_xml
-  puts vm_filtrada.monitoring(['MONITORING/CPU', 'MONITORING/MEMORY'])
+  puts vm_filtrada.monitoring(['MONITORING/CPU'])
 end
 
 
