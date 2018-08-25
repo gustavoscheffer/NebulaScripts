@@ -76,11 +76,8 @@ metrics_list = Array.new
 
 vms_filtradas.each do |vm_filtrada|
   #puts vm_filtrada.monitoring_xml
-  cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])[0]
-  
-  cpu_metrics_by_vm.each do |vm_metric|
-    puts cpu_metrics_by_vm
-  end
+  cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
+  puts cpu_metrics_by_vm
 end
 #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
 
