@@ -74,7 +74,7 @@ end
 vms_filtradas.each do |vm_filtrada|
   #puts vm_filtrada.monitoring_xml
   cpu_metric = vm_filtrada.monitoring(['MONITORING/CPU'])
-  puts cpu_metric['MONITORING/CPU']
+  puts cpu_metric['MONITORING/CPU'].[2]
 
 end
 
