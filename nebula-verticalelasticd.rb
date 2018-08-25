@@ -60,6 +60,7 @@ end
 
 # novo array para guardar as vms filtradas
 vms_filtradas = Array.new
+cpu_metrics_by_vm = Array.new
 
 #2) Filtrar as máquinas pelo nome e montar uma nova lista;
 vm_pool.each do |vm|
@@ -73,10 +74,16 @@ end
 #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
 vms_filtradas.each do |vm_filtrada|
   #puts vm_filtrada.monitoring_xml
-  cpu_metric = vm_filtrada.monitoring(['MONITORING/CPU'])
-  puts cpu_metric['MONITORING/CPU'].[2]
-
+  cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
+  
+  cpu_value = 0 
+  cpu_metrics_by_vm.each do |metric|
+    puts metric
+  end
 end
+
+
+
 
 
 #4) Gerar uma nova máquina com 30%mais recurso de memória e/ou mais 1 cpu;
