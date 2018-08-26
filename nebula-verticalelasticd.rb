@@ -71,13 +71,15 @@ vm_pool.each do |vm|
 end
 
 #metricas de cada vm
-cpu_metrics_by_vm = Array.new
-metrics_list = Array.new
+cpu_metrics_by_vm = Hash.new
+cpu_values = Array.new
 
 vms_filtradas.each do |vm_filtrada|
   #puts vm_filtrada.monitoring_xml
   cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
-  puts cpu_metrics_by_vm.fetch('MONITORING/CPU')
+  cpu_values = cpu_metrics_by_vm.fetch('MONITORING/CPU')
+  puts cpu_values.class
+  puts cpu_values
 end
 
 #verifica mais metricas de cada vm
