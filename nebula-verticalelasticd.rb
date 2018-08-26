@@ -82,7 +82,7 @@ end
 #verifica mais metricas de cada vm
 cpu_metrics_by_vm.each do |metric_by_vm|
   metric_by_vm.each do |metric|
-    puts metric
+    puts metric.instance_of?
   end  
 end 
 
