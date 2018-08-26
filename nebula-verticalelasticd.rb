@@ -79,10 +79,11 @@ vms_filtradas.each do |vm_filtrada|
   cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
 end
 
+puts cpu_metrics_by_vm.class
+
 #verifica mais metricas de cada vm
 cpu_metrics_by_vm.each do |metric_by_vm|
   metric_by_vm.each do |metric|
-    puts metric.class
   end  
 end 
 
