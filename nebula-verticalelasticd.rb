@@ -77,7 +77,7 @@ metrics_list = Array.new
 vms_filtradas.each do |vm_filtrada|
   #puts vm_filtrada.monitoring_xml
   cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
-  puts cpu_metrics_by_vm.class
+  puts cpu_metrics_by_vm.fetch('MONITORING/CPU')
 end
 
 #verifica mais metricas de cada vm
