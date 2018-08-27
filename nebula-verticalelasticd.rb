@@ -86,6 +86,9 @@ if (vms_filtradas.length != 0)
     val3 = cpu_values[cpu_values.length() -3][1].to_f
     
     media_val_cpu  = (val1. + val2 + val3)/3
+    
+    puts cpu_values
+    puts "Total:"
     puts media_val_cpu
   end
 end  
