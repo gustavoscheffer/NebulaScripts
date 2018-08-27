@@ -73,31 +73,36 @@ end
 #metricas de cada vm
 cpu_metrics_by_vm = Hash.new
 cpu_values = Array.new
+media_val_cpu #media da cpu
 
-if (vms_filtradas.length != 0) 
-  vms_filtradas.each do |vm_filtrada|
-    
-    #puts vm_filtrada.monitoring_xml
-    cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
-    cpu_values = cpu_metrics_by_vm.fetch('MONITORING/CPU')
-    
-    val1 = cpu_values[cpu_values.length() -1][1].to_f
-    val2 = cpu_values[cpu_values.length() -2][1].to_f
-    val3 = cpu_values[cpu_values.length() -3][1].to_f
-    
-    media_val_cpu  = (val1. + val2 + val3)/3
-    
-    puts cpu_values
-    puts "Total:"
-    puts media_val_cpu
-  end
-end  
+#verifico se foi encontrado alguma vm com o padrao do parametro
+if (vms_filtradas.length != 0)
 
+    #itera para pegar os dados de cada vm
+    vms_filtradas.each do |vm_filtrada|  
+      cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
+      cpu_values = cpu_metrics_by_vm.fetch('MONITORING/CPU')
+      
+      #valor dos 3 ultimos checks 
+      val1 = cpu_values[cpu_values.length() -1][1].to_f
+      val2 = cpu_values[cpu_values.length() -2][1].to_f
+      val3 = cpu_values[cpu_values.length() -3][1].to_f
+      
+      #calcula a media dos 3 ultimos checks 
+      media_val_cpu  = (val1. + val2 + val3)/3
+      
+      #verifica em qual check esta agora
+      if(round <= QTD_CHECKS)
 
+        #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);       
+        if(media_val_cpu > MET_CPU_MAX)       
+          #4) Gerar uma nova máquina com 30%mais recurso de memória e/ou mais 1 cpu;
+           # ====COLOCAR O SCRIPT AQUI====#
+           #5) Excluir a máquina antiga;
+           # ====COLOCAR O SCRIPT AQUI====#
+        end
 
-
-#3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
-
-#4) Gerar uma nova máquina com 30%mais recurso de memória e/ou mais 1 cpu;
-
-#5) Excluir a máquina antiga;
+        # COLOCAR O SLEEP AQUI!!!!!   
+      end
+    end
+end 
