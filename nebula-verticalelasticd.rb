@@ -74,27 +74,24 @@ end
 cpu_metrics_by_vm = Hash.new
 cpu_values = Array.new
 
+if (vms_filtradas.length != 0) 
+  vms_filtradas.each do |vm_filtrada|
+    
+    #puts vm_filtrada.monitoring_xml
+    cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
+    cpu_values = cpu_metrics_by_vm.fetch('MONITORING/CPU')
+    
+    val1 = cpu_values[cpu_values.length() -1][1]
+    val2 = cpu_values[cpu_values.length() -2][1]
+    val3 = cpu_values[cpu_values.length() -3][1]
+    
+    media_val_cpu  = (val1 + val2 + val3)/3
+    puts media_val_cpu
+  end
+end  
 
-vms_filtradas.each do |vm_filtrada|
-  #puts vm_filtrada.monitoring_xml
-  cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
-  cpu_values = cpu_metrics_by_vm.fetch('MONITORING/CPU')
-  puts cpu_values[cpu_values.length() -1][1]
-  puts cpu_values[cpu_values.length() -2][1]
-  puts cpu_values[cpu_values.length() -3][1]
-end
-  
 
 
-# cpu_values.each do |cpu_value|
-#   puts cpu_value[cpu_value.length - 1]
-# end
-
-#verifica mais metricas de cada vm
-cpu_metrics_by_vm.each do |metric_by_vm|
-  metric_by_vm.each do |metric|
-  end  
-end 
 
 #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);
 
