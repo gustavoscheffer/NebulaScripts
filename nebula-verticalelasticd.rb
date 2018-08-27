@@ -81,11 +81,11 @@ if (vms_filtradas.length != 0)
     cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
     cpu_values = cpu_metrics_by_vm.fetch('MONITORING/CPU')
     
-    val1 = cpu_values[cpu_values.length() -1][1]
-    val2 = cpu_values[cpu_values.length() -2][1]
-    val3 = cpu_values[cpu_values.length() -3][1]
+    val1 = cpu_values[cpu_values.length() -1][1].to_f
+    val2 = cpu_values[cpu_values.length() -2][1].to_f
+    val3 = cpu_values[cpu_values.length() -3][1].to_f
     
-    media_val_cpu  = (val1 + val2 + val3)/3
+    media_val_cpu  = (val1. + val2 + val3)/3
     puts media_val_cpu
   end
 end  
