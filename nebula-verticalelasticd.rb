@@ -81,8 +81,7 @@ vms_filtradas.each do |vm_filtrada|
   cpu_values = cpu_metrics_by_vm.fetch('MONITORING/CPU')
 end
 
-puts cpu_values.class
-puts  cpu_values
+puts cpu_values[cpu_values.length-1]
 
 
 #verifica mais metricas de cada vm
