@@ -84,7 +84,7 @@ end
 i = 0
 cpu_values.each do |cpu_value|
   puts cpu_value[i]
-  i+=1
+  i=+1
 end
 
 #verifica mais metricas de cada vm
