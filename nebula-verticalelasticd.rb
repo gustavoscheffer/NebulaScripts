@@ -83,7 +83,7 @@ end
 
 i = 0
 cpu_values.each do |cpu_value|
-  puts cpu_value.class
+  puts cpu_value[i]
   i+=1
 end
 
