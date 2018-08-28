@@ -7,17 +7,14 @@
 # treshold maximo de cpu
 MET_CPU_MAX  = 0
 
-# treshold maximo de memoria
-MET_MEMORY_MAX = 0 
-
-# treshold minimo de cpu
-MET_CPU_MIN  = 0 
-
-# treshold minimo de memoria
-MET_MEMORY_MIN = 0 
-
 # nome dos hosts a serem monitorados pelo verticalelastic
-MET_VMS ="teste-" 
+VM_NOME ="teste-"
+
+# Vezes em que deve ser ultrapassado o limite maximo de cpu
+QTD_CHECKS = 3
+
+# intervalo de cada check em minutos
+INTERVALO = 10 
 
 # OpenNebula credentials
 CREDENTIALS = "oneadmin:opennebula"
@@ -58,13 +55,15 @@ if OpenNebula.is_error?(rc)
      exit -1
 end
 
-# novo array para guardar as vms filtradas
-vms_filtradas = Array.new
+
 
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
+
+# novo array para guardar as vms filtradas
+vms_filtradas = Array.new
 vm_pool.each do |vm|
   vm.info
-  r = Regexp.new(MET_VMS)
+  r = Regexp.new(VM_NOME)
   if (!r.match(vm.name.to_s).nil?)
     vms_filtradas.push vm
   end
@@ -73,7 +72,7 @@ end
 #metricas de cada vm
 cpu_metrics_by_vm = Hash.new
 cpu_values = Array.new
-media_val_cpu #media da cpu
+cpu_value_final # valor final da cpu
 
 #verifico se foi encontrado alguma vm com o padrao do parametro
 if (vms_filtradas.length != 0)
@@ -83,26 +82,82 @@ if (vms_filtradas.length != 0)
       cpu_metrics_by_vm = vm_filtrada.monitoring(['MONITORING/CPU'])
       cpu_values = cpu_metrics_by_vm.fetch('MONITORING/CPU')
       
-      #valor dos 3 ultimos checks 
-      val1 = cpu_values[cpu_values.length() -1][1].to_f
-      val2 = cpu_values[cpu_values.length() -2][1].to_f
-      val3 = cpu_values[cpu_values.length() -3][1].to_f
-      
-      #calcula a media dos 3 ultimos checks 
-      media_val_cpu  = (val1. + val2 + val3)/3
-      
+      #valor do ultimo check 
+      cpu_value_final = cpu_values[cpu_values.length() -1][1].to_f
+
       #verifica em qual check esta agora
-      if(round <= QTD_CHECKS)
+      if(rodada >= QTD_CHECKS)
 
         #3) Verificar se estas máquinas ultrapassaram o limite de hardware (memoria ou cpu);       
-        if(media_val_cpu > MET_CPU_MAX)       
+        if(val_cpu_final > MET_CPU_MAX)       
           #4) Gerar uma nova máquina com 30%mais recurso de memória e/ou mais 1 cpu;
+          template = <<-EOT
+          CONTEXT = [
+            NETWORK = "YES",
+            REPORT_READY = "YES",
+            SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]",
+            TOKEN = "YES" ]
+          CPU = "0.3"
+          DESCRIPTION = "A small GNU/Linux system for testing"
+          DISK = [
+            IMAGE = "ttylinux",
+            IMAGE_UNAME = "oneadmin" ]
+          FEATURES = [
+            ACPI = "no",
+            APIC = "no" ]
+          GRAPHICS = [
+            LISTEN = "0.0.0.0",
+            TYPE = "VNC" ]
+          INPUTS_ORDER = ""
+          MEMORY = "128"
+          MEMORY_UNIT_COST = "MB"
+          OS = [
+            BOOT = "disk0" ]
+          EOT
+
+          # Creates a VirtualMachine description
+          xml = OpenNebula::VirtualMachine.build_xml
+          vm  = OpenNebula::VirtualMachine.new(xml, client)
+
+          # VirtualMachine new name
+          NEWNAME = VM_NOME
+
+          # Creates a VirtualMachine and bring it up
+          rc = vm.allocate(template)
+          if OpenNebula.is_error?(rc)
+              STDERR.puts rc.message
+              exit(-1)
+          else
+              vm.rename(NEWNAME + vm.id.to_s)
+              puts "New VM Started:\nID = #{vm.id.to_s} "
+              vm.info
+              puts vm.name
+              puts vm.state
+
+
+              #5) Excluir a máquina antiga;
+              if vm_filtrada.name.to_s
+                 #delete vm
+                 rc = vm_filtrada.delete
+                 if OpenNebula.is_error?(rc)
+                      puts "Virtual Machine #{vm.id}: #{rc.message}"
+
+                  else
+                      puts "Virtual Machine #{vm.id}: Shutting down and Delete after!"
+
+                  end
+              end
+          end
+        end
+        
+        if(val_cpu_final <= MET_CPU_MAX)       
+          #4) Voltar o hardware antigo
            # ====COLOCAR O SCRIPT AQUI====#
            #5) Excluir a máquina antiga;
            # ====COLOCAR O SCRIPT AQUI====#
-        end
-
-        # COLOCAR O SLEEP AQUI!!!!!   
+        end   
       end
     end
-end 
+end
+#tempo antes de repetir a consulta dos hosts
+sleep(INTERVALO.minutes)
