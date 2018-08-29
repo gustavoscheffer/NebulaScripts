@@ -112,8 +112,8 @@ vm_pool.each do |vm|
   vm.info
   r = Regexp.new(VM_NOME)
   if (!r.match(vm.name.to_s).nil?)
-    if ((vm.state_str <=> 'RUNNING') == 0)
       puts "#{vm.name.to_s} - #{vm.state_str}"
+    if ((vm.state_str <=> 'RUNNING') == 0)
       #vm_filtrada.push vm
     end 
   end
