@@ -112,7 +112,7 @@ vm_pool.each do |vm|
   vm.info
   r = Regexp.new(VM_NOME)
   if (!r.match(vm.name.to_s).nil?)
-    puts vm.name +''+ vm.state_str
+    puts "#{vm.name.to_s} - #{vm.state_str}"
     #vm_filtrada.push vm 
   end
 end
