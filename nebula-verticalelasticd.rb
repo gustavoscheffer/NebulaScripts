@@ -139,7 +139,12 @@ if ((vm_pool<=>'') == 0)
 end
 
 # iterar na lista de vms encontradas
-rc.each do |vm|
+puts vm_pool.class
+
+puts ''
+puts ''
+
+vm_pool.each do |vm|
   vm.info
   r = Regexp.new(VM_NOME)
   #verificamos se ha vms do servico em questao, se nao tiver criar essa miseria
