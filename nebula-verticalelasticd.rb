@@ -133,45 +133,46 @@ end
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 
 vm_filtrada = ''
-
 # verifica se a lista de vms está vazia
 if !(rc.nil?)
   # iterar na lista de vms encontradas
   rc.each do |vm|
-  vm.info
-  r = Regexp.new(VM_NOME)
-  #verificamos se ha vms do servico em questao
-  if (r.match(vm.name.to_s).nil?)
-    # se não encontrar a vm ele a cria
-    create_new_vm(VM_NOME, TEMPLATE_O, client)
-    puts "passei no create"
+    vm.info
+    r = Regexp.new(VM_NOME)
+    #verificamos se ha vms do servico em questao
+    if (r.match(vm.name.to_s).nil?)
+      # se não encontrar a vm ele a cria
+      create_new_vm(VM_NOME, TEMPLATE_O, client)
+      puts "passei no create"
+    end
+      # se a vm for encontrada e estiver rodando, coletamos o uso da cpu
+    if ((vm.lcm_state_str <=> 'RUNNING') == 0)
+      vm_filtrada = vm
+      puts "passei no running"
+    else
+      puts "Nao existe maquina em RUNNING"
+      exit -1
+    end
   end
-    # se a vm for encontrada e estiver rodando, coletamos o uso da cpu
-  if ((vm.lcm_state_str <=> 'RUNNING') == 0)
-    vm_filtrada = vm
-    puts "passei no running"
-  else
-    puts "Nao existe maquina em RUNNING"
-    exit -1
-  end
+
 else
   puts "Nenhuma VM foi encontrada no Nebuloso!"
   exit -1
 end
 
 
-# itera na lista de vms encontradas no Nebuloso
+# # itera na lista de vms encontradas no Nebuloso
 
 
-if ((vm_filtrada <=> '') != 0)
-   metricas  = vm_filtrada.monitoring(['MONITORING/CPU'])
-   metricas_cpu = metricas.fetch('MONITORING/CPU')
-   cpu_metrica_valor_final = metricas_cpu[metricas_cpu.length() -1][1].to_f
-   puts pu_metrica_valor_final
- else
-  puts "Nao foram encontradas maquinas"
-  exit -1
-end
+# if ((vm_filtrada <=> '') != 0)
+#    metricas  = vm_filtrada.monitoring(['MONITORING/CPU'])
+#    metricas_cpu = metricas.fetch('MONITORING/CPU')
+#    cpu_metrica_valor_final = metricas_cpu[metricas_cpu.length() -1][1].to_f
+#    puts pu_metrica_valor_final
+#  else
+#   puts "Nao foram encontradas maquinas"
+#   exit -1
+# end
 
 
 # #metricas de cada vm
