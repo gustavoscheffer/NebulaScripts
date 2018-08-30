@@ -133,6 +133,8 @@ end
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 
 vm_filtrada = ''
+
+puts vm_pool
 vm_pool.each do |vm|
   vm.info
   r = Regexp.new(VM_NOME)
