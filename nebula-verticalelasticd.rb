@@ -150,7 +150,7 @@ vm_pool.each do |vm|
 
 end
 
-if ((vm_filtrada <=> '') == 0)
+if ((vm_filtrada <=> '') != 0)
    metricas  = vm_filtrada.monitoring(['MONITORING/CPU'])
    metricas_cpu = metricas.fetch('MONITORING/CPU')
    cpu_metrica_valor_final = metricas_cpu[metricas_cpu.length() -1][1].to_f
