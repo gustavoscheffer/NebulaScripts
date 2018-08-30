@@ -88,6 +88,8 @@ def create_new_vm(new_name, template, client)
     if OpenNebula.is_error?(rc)
       STDERR.puts rc.message
       exit(-1)
+    else
+      puts "VM #{new_name + vm.id.to_s} criada com sucesso!"
     end
   end
 end
@@ -124,7 +126,6 @@ vm_pool = VirtualMachinePool.new(client, -1)
 rc = vm_pool.info
 if OpenNebula.is_error?(rc)
      puts rc.message
-     puts "NAO FOI POSSIVEL CRIAR UMA VM NOVA"
      exit -1
 end
 
