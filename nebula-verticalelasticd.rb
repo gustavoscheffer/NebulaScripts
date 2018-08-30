@@ -139,11 +139,12 @@ vm_pool.each do |vm|
   if (r.match(vm.name.to_s).nil?)
     # se não encontrar a vm ele a cria...
     create_new_vm(VM_NOME, TEMPLATE_O, client)
+    puts "passei no create"
   end
     # se a vm for encontrada e estiver rodando, coletamos o uso da cpu
   if ((vm.lcm_state_str <=> 'RUNNING') == 0)
       vm_filtrada = vm
-  
+      puts "passei no running"
   else
     puts "Nao existe maquina em RUNNING"
     exit -1
@@ -156,8 +157,7 @@ if ((vm_filtrada <=> '') != 0)
    metricas_cpu = metricas.fetch('MONITORING/CPU')
    cpu_metrica_valor_final = metricas_cpu[metricas_cpu.length() -1][1].to_f
    puts pu_metrica_valor_final
-
-else
+ else
   puts "Nao foram encontradas maquinas"
   exit -1
 end
