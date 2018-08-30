@@ -13,8 +13,8 @@ ENDPOINT    = "http://localhost:2633/RPC2"
 # treshold maximo de cpu
 CPU_MAX  = 0
 
-# nome dos hosts a serem monitorados pelo verticalelastic
-VM_NOME = ""
+# nome da vm no padrao nome-
+VM_NOME = "mysql-"
 
 # Vezes em que deve ser ultrapassado o limite maximo de cpu
 QTD_CHECKS = 3
@@ -68,6 +68,33 @@ TEMPLATE_N1 = 'CONTEXT = [
             OS = [
             BOOT = "disk0" ]'
 
+##############################################################################
+# Methods
+##############################################################################
+
+def create_new_vm(new_name, template)
+
+  # Creates a VirtualMachine description
+  xml = OpenNebula::VirtualMachine.build_xml
+  vm  = OpenNebula::VirtualMachine.new(xml, client)
+
+  # Creates a VirtualMachine and bring it up
+  rc = vm.allocate(template)
+  if OpenNebula.is_error?(rc)
+      STDERR.puts rc.message
+      exit(-1)
+  else
+    rc = vm.rename(new_name + vm.id.to_s)
+    if OpenNebula.is_error?(rc)
+      STDERR.puts rc.message
+      exit(-1)
+    end
+  end
+end
+
+def remove_old_vm()
+  
+end
 
 ##############################################################################
 # Environment Configuration
@@ -93,7 +120,6 @@ client = Client.new(CREDENTIALS, ENDPOINT)
 
 # 1) Pegar lista de máquinas existentes;
 vm_pool = VirtualMachinePool.new(client, -1)
-
 #controla se houve erro na request
 rc = vm_pool.info
 if OpenNebula.is_error?(rc)
@@ -105,20 +131,27 @@ end
 
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 
-# novo array para guardar as vms filtradas
-vm_filtrada = Array.new
-
+vm_filtrada = ''
 vm_pool.each do |vm|
   vm.info
   r = Regexp.new(VM_NOME)
-  if (!r.match(vm.name.to_s).nil?)
-      puts "#{vm.name.to_s} - #{vm.state_str}"
-    if ((vm.lcm_state_str <=> 'RUNNING') == 0)
-      puts "#{vm.name.to_s} - #{vm.state_str}"
-      #vm_filtrada.push vm
-    end 
+  if (r.match(vm.name.to_s).nil?)
+    # se não encontrar a vm ele a cria...
+    create_new_vm(VM_NOME, template)
   end
+    # se a vm for encontrada e estiver rodando, coletamos o uso da cpu
+  if ((vm.lcm_state_str <=> 'RUNNING') == 0)
+      vm_filtrada = vm
+  end 
 end
+
+if (vm_filtrada > 0)
+   metricas  = vm_filtrada.monitoring(['MONITORING/CPU'])
+   metricas_cpu = metricas.fetch('MONITORING/CPU')
+   cpu_metrica_valor_final = metricas_cpu[metricas_cpu.length() -1][1].to_f
+   puts pu_metrica_valor_final
+end
+
 
 # #metricas de cada vm
 # cpu_metrics_by_vm = Hash.new
