@@ -134,9 +134,8 @@ end
 
 vm_filtrada = ''
 
-puts rc.class
-puts rc
-vm_pool.each do |vm|
+# itera na lista de vms encontradas no Nebuloso
+rc.each do |vm|
   vm.info
   r = Regexp.new(VM_NOME)
   if (r.match(vm.name.to_s).nil?)
