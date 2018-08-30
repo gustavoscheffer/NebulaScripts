@@ -132,7 +132,7 @@ end
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 
 # verifica se a lista de vms está vazia, se estiver cria uma maquina
-if (rc.nil?)
+if (vm_pool<=>'') == 0)
   puts "Nenhuma VM foi encontrada no Nebuloso!" 
   puts "vou criar agora mesmo"
   create_new_vm(VM_NOME, TEMPLATE_O, client)
@@ -144,7 +144,7 @@ rc.each do |vm|
   r = Regexp.new(VM_NOME)
   #verificamos se ha vms do servico em questao, se nao tiver criar essa miseria
   if (r.match(vm.name.to_s).nil?)
-    puts "passei no create pois nao tinha vm para o servico"
+    puts "passei no create, pois nao tinha vm para o servico"
     create_new_vm(VM_NOME, TEMPLATE_O, client)
   end
     # se a vm for encontrada e estiver rodando, coletamos o uso da cpu
