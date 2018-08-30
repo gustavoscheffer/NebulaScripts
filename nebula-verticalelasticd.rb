@@ -132,7 +132,7 @@ end
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 
 # verifica se a lista de vms está vazia, se estiver cria uma maquina
-if (vm_pool<=>'') == 0)
+if ((vm_pool<=>'') == 0)
   puts "Nenhuma VM foi encontrada no Nebuloso!" 
   puts "vou criar agora mesmo"
   create_new_vm(VM_NOME, TEMPLATE_O, client)
