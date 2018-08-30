@@ -124,9 +124,9 @@ vm_pool = VirtualMachinePool.new(client, -1)
 rc = vm_pool.info
 if OpenNebula.is_error?(rc)
      puts rc.message
+     puts "NAO FOI POSSIVEL CRIAR UMA VM NOVA"
      exit -1
 end
-
 
 
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
@@ -142,14 +142,23 @@ vm_pool.each do |vm|
     # se a vm for encontrada e estiver rodando, coletamos o uso da cpu
   if ((vm.lcm_state_str <=> 'RUNNING') == 0)
       vm_filtrada = vm
-  end 
+  
+  else
+    puts "Nao existe maquina em RUNNING"
+    exit -1
+  end
+
 end
 
-if (vm_filtrada > 0)
+if ((vm_filtrada <=> '') == 0)
    metricas  = vm_filtrada.monitoring(['MONITORING/CPU'])
    metricas_cpu = metricas.fetch('MONITORING/CPU')
    cpu_metrica_valor_final = metricas_cpu[metricas_cpu.length() -1][1].to_f
    puts pu_metrica_valor_final
+
+else
+  puts "Nao foram encontradas maquinas"
+  exit -1
 end
 
 
