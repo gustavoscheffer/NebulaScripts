@@ -134,7 +134,8 @@ end
 
 vm_filtrada = ''
 
-puts vm_pool.class
+puts rc.class
+puts rc
 vm_pool.each do |vm|
   vm.info
   r = Regexp.new(VM_NOME)
