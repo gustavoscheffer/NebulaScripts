@@ -135,7 +135,7 @@ end
 vm_filtrada = ''
 
 # verifica se a lista de vms está vazia
-if !rc.nil?
+if !(rc.nil?)
   # iterar na lista de vms encontradas
   rc.each do |vm|
   vm.info
@@ -148,14 +148,14 @@ if !rc.nil?
   end
     # se a vm for encontrada e estiver rodando, coletamos o uso da cpu
   if ((vm.lcm_state_str <=> 'RUNNING') == 0)
-      vm_filtrada = vm
-      puts "passei no running"
+    vm_filtrada = vm
+    puts "passei no running"
   else
     puts "Nao existe maquina em RUNNING"
     exit -1
   end
 else
-  puts "Nenhuma VM foi encontrada"
+  puts "Nenhuma VM foi encontrada no Nebuloso!"
   exit -1
 end
 
