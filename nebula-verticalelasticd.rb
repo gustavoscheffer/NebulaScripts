@@ -72,7 +72,7 @@ TEMPLATE_N1 = 'CONTEXT = [
 # Methods
 ##############################################################################
 
-def create_new_vm(new_name, template)
+def create_new_vm(new_name, template, client)
 
   # Creates a VirtualMachine description
   xml = OpenNebula::VirtualMachine.build_xml
