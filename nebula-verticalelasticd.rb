@@ -139,10 +139,11 @@ if ((vm_pool<=>'') == 0)
 end
 
 # iterar na lista de vms encontradas
-puts vm_pool.info
+vm_pool.each do |vm|
+  vm.info
+  puts vm.name
+end
 
-puts ''
-puts ''
 
 # vm_pool.each do |vm|
 #   vm.info
