@@ -134,12 +134,15 @@ end
 
 vm_filtrada = ''
 
-# itera na lista de vms encontradas no Nebuloso
-rc.each do |vm|
+# verifica se a lista de vms está vazia
+if !rc.nil?
+  # iterar na lista de vms encontradas
+  rc.each do |vm|
   vm.info
   r = Regexp.new(VM_NOME)
+  #verificamos se ha vms do servico em questao
   if (r.match(vm.name.to_s).nil?)
-    # se não encontrar a vm ele a cria...
+    # se não encontrar a vm ele a cria
     create_new_vm(VM_NOME, TEMPLATE_O, client)
     puts "passei no create"
   end
@@ -151,8 +154,14 @@ rc.each do |vm|
     puts "Nao existe maquina em RUNNING"
     exit -1
   end
-
+else
+  puts "Nenhuma VM foi encontrada"
+  exit -1
 end
+
+
+# itera na lista de vms encontradas no Nebuloso
+
 
 if ((vm_filtrada <=> '') != 0)
    metricas  = vm_filtrada.monitoring(['MONITORING/CPU'])
