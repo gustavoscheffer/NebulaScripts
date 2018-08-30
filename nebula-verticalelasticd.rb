@@ -137,7 +137,7 @@ vm_pool.each do |vm|
   r = Regexp.new(VM_NOME)
   if (r.match(vm.name.to_s).nil?)
     # se não encontrar a vm ele a cria...
-    create_new_vm(VM_NOME, TEMPLATE_O)
+    create_new_vm(VM_NOME, TEMPLATE_O, client)
   end
     # se a vm for encontrada e estiver rodando, coletamos o uso da cpu
   if ((vm.lcm_state_str <=> 'RUNNING') == 0)
