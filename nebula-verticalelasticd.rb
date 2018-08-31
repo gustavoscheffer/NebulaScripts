@@ -119,6 +119,26 @@ def get_vm_list(vm_name_pattern, client)
   return vm_list
 end
 
+def get_cpu_value_by_vm(vms_encontradas)
+  lista_vm_com_metrica = Array.new
+  vms_encontradas.each do |vm|
+    if ((vm.lcm_state_str <=> 'RUNNING') == 0)
+      vm_com_metrica = Array.new
+      cpu_object = vm.monitoring(['MONITORING/CPU'])
+      cpu_values = cpu_object.fetch('MONITORING/CPU')
+      last_value_cpu = cpu_values[cpu_values.length() -1][1].to_f 
+      puts cpu_object
+      puts cpu_values[cpu_values.length() -1][1].to_f
+      puts "+++++++"
+      puts " "
+      vm_com_metrica.push(vm.name)
+      vm_com_metrica.push(last_value_cpu)
+      lista_vm_com_metrica.push(vm_com_metrica)
+    end
+  end
+  return lista_vm_com_metrica
+end
+
 def remove_old_vm(client)
 end
 
@@ -153,26 +173,27 @@ if vms_encontradas.length == 0
   vms_encontradas = get_vm_list(VM_NOME, client)
 end
 
+puts get_cpu_value_by_vm(vms_encontradas)
 
+# lista_vm_com_metrica = Array.new
 
-lista_vm_com_metrica = Array.new
-vms_encontradas.each do |vm|
-  if ((vm.lcm_state_str <=> 'RUNNING') == 0)
-    vm_com_metrica = Array.new
-    cpu_object = vm.monitoring(['MONITORING/CPU'])
-    cpu_values = cpu_object.fetch('MONITORING/CPU')
-    last_value_cpu = cpu_values[cpu_values.length() -1][1].to_f 
-    puts cpu_object
-    puts cpu_values[cpu_values.length() -1][1].to_f
-    puts "+++++++"
-    puts " "
-    vm_com_metrica.push(vm.name)
-    vm_com_metrica.push(last_value_cpu)
-    lista_vm_com_metrica.push(vm_com_metrica)
-  end
-end 
+# vms_encontradas.each do |vm|
+#   if ((vm.lcm_state_str <=> 'RUNNING') == 0)
+#     vm_com_metrica = Array.new
+#     cpu_object = vm.monitoring(['MONITORING/CPU'])
+#     cpu_values = cpu_object.fetch('MONITORING/CPU')
+#     last_value_cpu = cpu_values[cpu_values.length() -1][1].to_f 
+#     puts cpu_object
+#     puts cpu_values[cpu_values.length() -1][1].to_f
+#     puts "+++++++"
+#     puts " "
+#     vm_com_metrica.push(vm.name)
+#     vm_com_metrica.push(last_value_cpu)
+#     lista_vm_com_metrica.push(vm_com_metrica)
+#   end
+# end 
 
-puts lista_vm_com_metrica
+#puts lista_vm_com_metrica
 
 
 # vm_pool.each do |vm|
