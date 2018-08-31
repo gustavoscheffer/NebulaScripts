@@ -20,7 +20,7 @@ VM_NOME = "mysql-"
 QTD_CHECKS = 3
 
 # intervalo de cada check em minutos
-INTERVALO = 10 
+INTERVALO = 1
 
 # Template original
 TEMPLATE_O = 'CONTEXT = [
@@ -127,10 +127,6 @@ def get_cpu_value_by_vm(vms_encontradas)
       cpu_object = vm.monitoring(['MONITORING/CPU'])
       cpu_values = cpu_object.fetch('MONITORING/CPU')
       last_value_cpu = cpu_values[cpu_values.length() -1][1].to_f 
-      puts cpu_object
-      puts cpu_values[cpu_values.length() -1][1].to_f
-      puts "+++++++"
-      puts " "
       vm_com_metrica.push(vm.name)
       vm_com_metrica.push(last_value_cpu)
       lista_vm_com_metrica.push(vm_com_metrica)
@@ -164,16 +160,43 @@ include OpenNebula
 
 client = Client.new(CREDENTIALS, ENDPOINT)
 
+rodar = 1
+while rodar == 1
+  if rodada <= QTD_CHECKS 
+  
+    # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
+    vms_encontradas = get_vm_list(VM_NOME, client) 
 
-# 2) Filtrar as máquinas pelo nome e montar uma nova lista;
-vms_encontradas = get_vm_list(VM_NOME, client) 
-
-if vms_encontradas.length == 0
-  create_new_vm(VM_NOME, TEMPLATE_O, client)
-  vms_encontradas = get_vm_list(VM_NOME, client)
+    if vms_encontradas.length == 0
+      create_new_vm(VM_NOME, TEMPLATE_O, client)
+      vms_encontradas = get_vm_list(VM_NOME, client)
+    end
+    puts get_cpu_value_by_vm(vms_encontradas)
+    puts '----'  
+  end
+  puts " VALOR FINAL == #{get_cpu_value_by_vm(vms_encontradas)}"
+  sleep(INTERVALO.minutes)
 end
 
+
+
+
+# vms_com_cpu_metricas = get_cpu_value_by_vm(vms_encontradas)
+
+# if vm_com_metrica.length != 0
+#   vms_com_cpu_metricas.each do |vm|
+#     vm.each do |vm_e_metrica|
+
+#     end
+#   end
+# end
+
+
 puts get_cpu_value_by_vm(vms_encontradas)
+
+
+
+
 
 # lista_vm_com_metrica = Array.new
 
