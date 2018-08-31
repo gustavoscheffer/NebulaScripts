@@ -136,6 +136,14 @@ if ((vm_pool<=>'') == 0)
   puts "Nenhuma VM foi encontrada no Nebuloso!" 
   puts "vou criar agora mesmo"
   create_new_vm(VM_NOME, TEMPLATE_O, client)
+
+  vm_pool = VirtualMachinePool.new(client, -1)
+  #controla se houve erro na request
+  rc = vm_pool.info
+  if OpenNebula.is_error?(rc)
+     puts rc.message
+     exit -1
+  end
 end
 
 # iterar na lista de vms encontradas
