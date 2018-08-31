@@ -162,7 +162,7 @@ client = Client.new(CREDENTIALS, ENDPOINT)
 
 rodar = 1
 while rodar == 1
-  if rodada <= QTD_CHECKS 
+  for rodada in  1..QTD_CHECKS 
   
     # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
     vms_encontradas = get_vm_list(VM_NOME, client) 
