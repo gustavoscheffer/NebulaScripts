@@ -11,7 +11,7 @@ CREDENTIALS = "oneadmin:opennebula"
 ENDPOINT    = "http://localhost:2633/RPC2"
 
 # treshold maximo de cpu
-CPU_MAX  = 0
+CPU_MAX  = 20
 
 # nome da vm no padrao nome-
 VM_NOME = "mysql-"
@@ -224,7 +224,7 @@ while rodar == 1
     sleep(INTERVALO)
   end
 
-  if vm_com_metrica.length != 0
+  if vms_com_cpu_metricas.length != 0
     vms_com_cpu_metricas.each do |vm|
       vm.each do |vm_e_metrica|
         
