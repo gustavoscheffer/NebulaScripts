@@ -129,7 +129,7 @@ def get_cpu_value_by_vm(vms_encontradas)
       cpu_values = cpu_object.fetch('MONITORING/CPU')
       last_value_cpu = cpu_values[cpu_values.length() -1][1].to_f 
       vm_com_metrica.push(vm.name)
-      vm_com_metrica.push(last_value_cpu)
+      vm_com_metrica.push(last_value_cpu.to_f)
       lista_vm_com_metrica.push(vm_com_metrica)
     end
   end
@@ -231,8 +231,11 @@ while rodar == 1
         
         consumo_cpu = vm_e_metrica[1]
         vm_nome_antiga = vm_e_metrica[0]
+
+        puts consumo_cpu.to_f
+        puts vm_nome_antiga
         
-        if consumo_cpu.to_f > CPU_MAX 
+        if consumo_cpu.to_f > CPU_MAX.to_f 
           
           vm_nome_nova = create_new_vm(VM_NOME, TEMPLATE_N1, client)
           vm_status = ''
