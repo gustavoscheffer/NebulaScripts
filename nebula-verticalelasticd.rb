@@ -158,7 +158,7 @@ end
 vms_encontradas.each do |vm|
   cpu_object = vm.monitoring(['MONITORING/CPU'])
   cpu_values = cpu_object.fetch('MONITORING/CPU')
-  if cpu_values.nil?
+  if cpu_values[cpu_values.length() -1][1].nil?
     last_value = 0  
   end
   last_value  = cpu_values[cpu_values.length() -1][1].to_i
