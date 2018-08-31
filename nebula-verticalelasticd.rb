@@ -96,6 +96,7 @@ def create_new_vm(new_name, template, client)
     end
   else
     puts "VM #{new_name + vm.id.to_s} criada com sucesso!"
+    return new_name + vm.id.to_s
   end
 end
 
@@ -135,7 +136,42 @@ def get_cpu_value_by_vm(vms_encontradas)
   return lista_vm_com_metrica
 end
 
-def remove_old_vm(client)
+def remove_old_vm(vm_name, client)
+  vm_pool = VirtualMachinePool.new(client, -1)
+  rc = vm_pool.info
+  if OpenNebula.is_error?(rc)
+    puts rc.message
+    exit -1
+  end
+
+  vm_pool.each do |vm|
+    #get info about vm
+    vm.info
+    if ((vm.name <=> vm_name) == 0)
+      #delete vm
+      rc = vm.delete
+      if OpenNebula.is_error?(rc)
+        puts "Virtual Machine #{vm.id}: #{rc.message}"
+      else
+        puts "Virtual Machine #{vm.id}: Shutting down and Delete after!"
+      end
+    end
+  end
+end
+
+def get_status_vm(vm_name,client)
+  vm_pool = VirtualMachinePool.new(client, -1)
+  rc = vm_pool.info
+  if OpenNebula.is_error?(rc)
+    puts rc.message
+    exit -1
+  end
+  vm_pool.each do |vm|
+    if ((vm.name <=> vm_name) == 0)
+      return vm.lcm_state_str
+    end  
+  end
+
 end
 
 ##############################################################################
@@ -174,6 +210,12 @@ while rodar == 1
 
     if vms_encontradas.length == 0
       create_new_vm(VM_NOME, TEMPLATE_O, client)
+
+      # tempo para ajustar o host que esta sendo criado...
+      puts "Nao constam vms para o servico..."
+      puts "Estamos criando uma agora mesmo"
+      sleep(60*5)
+      
       vms_encontradas = get_vm_list(VM_NOME, client)
     end
     vms_com_cpu_metricas = get_cpu_value_by_vm(vms_encontradas)
@@ -185,7 +227,22 @@ while rodar == 1
   if vm_com_metrica.length != 0
     vms_com_cpu_metricas.each do |vm|
       vm.each do |vm_e_metrica|
-        puts vm_e_metrica[1]
+        
+        consumo_cpu = vm_e_metrica[1]
+        vm_nome_antiga = vm_e_metrica[0]
+        
+        if consumo_cpu > CPU_MAX 
+          
+          vm_nome_nova = create_new_vm(VM_NOME, TEMPLATE_N1, client)
+          vm_status = ''
+          
+          while vm_status != 'RUNNING'
+            get_status_vm(vm_nome_nova, client)
+          end
+          # maquina removida quando a nova estiver ok.
+          remove_old_vm(vm_nome_antiga)
+        end
+      
       end
     end
   end
@@ -193,23 +250,6 @@ while rodar == 1
 end
 
 #puts " VALOR FINAL == #{get_cpu_value_by_vm(vms_encontradas)}"
-
-
-
-
-# vms_com_cpu_metricas = get_cpu_value_by_vm(vms_encontradas)
-
-if vm_com_metrica.length != 0
-  vms_com_cpu_metricas.each do |vm|
-    vm.each do |vm_e_metrica|
-
-    end
-  end
-end
-
-
-puts get_cpu_value_by_vm(vms_encontradas)
-
 
 
 
