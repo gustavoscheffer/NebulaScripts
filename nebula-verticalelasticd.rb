@@ -158,8 +158,8 @@ end
 vms_encontradas.each do |vm|
   cpu_object = vm.monitoring(['MONITORING/CPU'])
   cpu_values = cpu_object.fetch('MONITORING/CPU')
-  puts cpu_values
-  puts '--------'
+  last_value  = cpu_values[cpu_values.length() -1][1].to_i
+  puts last_value
 end 
 
 
