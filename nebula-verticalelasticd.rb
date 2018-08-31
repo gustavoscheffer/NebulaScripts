@@ -202,7 +202,7 @@ rodar = 1
 while rodar == 1
   
   vms_encontradas = Array.new
-  vms_com_cpu_metricas = Array.new()
+  vms_com_cpu_metricas = Array.new
 
   for rodada in  1..QTD_CHECKS 
     # 2) Coleta os dados das vms
@@ -227,28 +227,25 @@ while rodar == 1
 
   if vms_com_cpu_metricas.length != 0
     vms_com_cpu_metricas.each do |vm|
-      vm.each do |vm_e_metrica|
-        
-        consumo_cpu = vm_e_metrica[1]
-        vm_nome_antiga = vm_e_metrica[0]
+      consumo_cpu = vm_e_metrica[1]
+      vm_nome_antiga = vm_e_metrica[0]
 
-        puts consumo_cpu.to_f
-        puts vm_nome_antiga
-        
-        if consumo_cpu.to_f > CPU_MAX.to_f 
-          
-          vm_nome_nova = create_new_vm(VM_NOME, TEMPLATE_N1, client)
-          vm_status = ''
-          
-          while vm_status != 'RUNNING'
-            get_status_vm(vm_nome_nova, client)
-          end
-          # maquina removida quando a nova estiver ok.
-          remove_old_vm(vm_nome_antiga)
-        end
+      puts consumo_cpu.to_f
+      puts vm_nome_antiga
       
+      if consumo_cpu.to_f > CPU_MAX.to_f 
+        
+        vm_nome_nova = create_new_vm(VM_NOME, TEMPLATE_N1, client)
+        vm_status = ''
+        
+        while vm_status != 'RUNNING'
+          get_status_vm(vm_nome_nova, client)
+        end
+        # maquina removida quando a nova estiver ok.
+        remove_old_vm(vm_nome_antiga)
       end
-    end
+    
+      end
   end
 
 end
