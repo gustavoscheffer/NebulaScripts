@@ -157,20 +157,18 @@ end
 
 lista_vm_com_metrica = Array.new
 vms_encontradas.each do |vm|
-
-  vm_com_metrica = Array.new
-
   if ((vm.lcm_state_str <=> 'RUNNING') == 0)
+    vm_com_metrica = Array.new
     cpu_object = vm.monitoring(['MONITORING/CPU'])
     cpu_values = cpu_object.fetch('MONITORING/CPU')
-     
+    last_value_cpu = cpu_values[cpu_values.length() -1][1].to_f 
     puts cpu_object
     puts cpu_values[cpu_values.length() -1][1].to_f
     puts "+++++++"
-    #puts last_value_cpu
     puts " "
     vm_com_metrica.push(vm.name)
-    #vm_com_metrica.push(vm.last_value_cpu)
+    vm_com_metrica.push(last_value_cpu)
+    lista_vm_com_metrica.push(vm_com_metrica)
   end
 end 
 
