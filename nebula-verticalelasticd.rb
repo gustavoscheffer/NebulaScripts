@@ -152,7 +152,7 @@ end
 
 # iterar na lista de vms encontradas
 vm_pool.each do |vm|
-  puts vm
+  puts vm.to_s
 end
 
 
