@@ -23,10 +23,10 @@ CPU_MIN  = 10
 VM_NOME = "vert_elastic-"
 
 # Vezes em que deve ser ultrapassado o limite maximo de cpu
-QTD_CHECKS = 3
+QTD_CHECKS = 5
 
 # intervalo de cada check em segundos
-INTERVALO = 20
+INTERVALO = 30
 
 # Template original
 TEMPLATE_O = 'CONTEXT = [
@@ -265,7 +265,7 @@ while rodar == 1
         # verificar se ela ja subiu
         while vm_status != 'RUNNING'
           vm_status  = get_status_vm(vm_nome_nova, client)
-          sleep(10)
+          sleep(5)
         end
 
         # maquina antiga removida quando a nova estiver ok
@@ -284,7 +284,7 @@ while rodar == 1
         # verifica o status da nova vm
         while vm_status != 'RUNNING'
           vm_status  = get_status_vm(vm_nome_nova, client)
-          sleep(10)
+          sleep(5)
         end
         # maquina antiga removida quando a nova estiver ok.
         remove_old_vm(vm_nome_antiga,client)
