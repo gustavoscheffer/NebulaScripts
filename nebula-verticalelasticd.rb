@@ -226,7 +226,7 @@ while rodar == 1
   end
 
   if vms_com_cpu_metricas.length != 0
-    vms_com_cpu_metricas.each do |vm|
+    vms_com_cpu_metricas.each do |vm_e_metrica|
       consumo_cpu = vm_e_metrica[1]
       vm_nome_antiga = vm_e_metrica[0]
 
