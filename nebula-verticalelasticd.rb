@@ -14,13 +14,13 @@ ENDPOINT    = "http://localhost:2633/RPC2"
 QTD_VMS = 2
 
 # treshold maximo de cpu
-CPU_MAX  = 20
+CPU_MAX  = 80
 
 # treshold minimo de cpu
 CPU_MIN  = 10
 
 # nome do servico. Usar o padrao "nonme-""
-VM_NOME = "mysql-"
+VM_NOME = "vert_elastic-"
 
 # Vezes em que deve ser ultrapassado o limite maximo de cpu
 QTD_CHECKS = 3
@@ -30,54 +30,51 @@ INTERVALO = 20
 
 # Template original
 TEMPLATE_O = 'CONTEXT = [
-            NETWORK = "YES",
-            REPORT_READY = "YES",
-            SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]",
-            TOKEN = "YES" ]
-            CPU = "0.3"
-            DESCRIPTION = "A small GNU/Linux system for testing"
-            DISK = [
-            IMAGE = "ttylinux",
-            IMAGE_UNAME = "oneadmin" ]
-            FEATURES = [
-            ACPI = "no",
-            APIC = "no" ]
-            GRAPHICS = [
-            LISTEN = "0.0.0.0",
-            TYPE = "VNC" ]
-            INPUTS_ORDER = ""
-            MEMORY = "128"
-            MEMORY_UNIT_COST = "MB"
-            OS = [
-            BOOT = "disk0" ]'
+  NETWORK = "YES",
+  SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]" ]
+CPU = "0.5"
+DISK = [
+  IMAGE_ID = "4" ]
+GRAPHICS = [
+  LISTEN = "0.0.0.0",
+  TYPE = "VNC" ]
+INPUTS_ORDER = ""
+LOGO = "images/logos/fedora.png"
+MEMORY = "768"
+MEMORY_UNIT_COST = "MB"
+NIC = [
+  NETWORK = "cloud",
+  NETWORK_UNAME = "oneadmin" ]
+OS = [
+  ARCH = "x86_64",
+  BOOT = "" ]'
 
 # Template usado para subir aumentar o hardware em 10%
 TEMPLATE_N1 = 'CONTEXT = [
-            NETWORK = "YES",
-            REPORT_READY = "YES",
-            SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]",
-            TOKEN = "YES" ]
-            CPU = "0.4"
-            DESCRIPTION = "A small GNU/Linux system for testing"
-            DISK = [
-            IMAGE = "ttylinux",
-            IMAGE_UNAME = "oneadmin" ]
-            FEATURES = [
-            ACPI = "no",
-            APIC = "no" ]
-            GRAPHICS = [
-            LISTEN = "0.0.0.0",
-            TYPE = "VNC" ]
-            INPUTS_ORDER = ""
-            MEMORY = "128"
-            MEMORY_UNIT_COST = "MB"
-            OS = [
-            BOOT = "disk0" ]'
+  NETWORK = "YES",
+  SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]" ]
+CPU = "0.7"
+DISK = [
+  IMAGE_ID = "4" ]
+GRAPHICS = [
+  LISTEN = "0.0.0.0",
+  TYPE = "VNC" ]
+INPUTS_ORDER = ""
+LOGO = "images/logos/fedora.png"
+MEMORY = "768"
+MEMORY_UNIT_COST = "MB"
+NIC = [
+  NETWORK = "cloud",
+  NETWORK_UNAME = "oneadmin" ]
+OS = [
+  ARCH = "x86_64",
+  BOOT = "" ]'
 
 ##############################################################################
 # Methods
 ##############################################################################
 
+# metodo para criar uma nova vm
 def create_new_vm(new_name, template, client)
 
   # Creates a VirtualMachine description
@@ -106,6 +103,7 @@ def create_new_vm(new_name, template, client)
   end
 end
 
+# metodo que filra as vms do servico
 def get_vm_list(vm_name_pattern, client)
   vm_list = Array.new
   vm_pool = VirtualMachinePool.new(client, -1)
@@ -126,6 +124,7 @@ def get_vm_list(vm_name_pattern, client)
   return vm_list
 end
 
+# metodo para pegar a vm e suas metricas e coloca em uma nova lista
 def get_cpu_value_by_vm(vms_encontradas)
   lista_vm_com_metrica = Array.new
   vms_encontradas.each do |vm|
@@ -142,6 +141,7 @@ def get_cpu_value_by_vm(vms_encontradas)
   return lista_vm_com_metrica
 end
 
+# metodo para excluir uma vm
 def remove_old_vm(vm_name, client)
   vm_pool = VirtualMachinePool.new(client, -1)
   rc = vm_pool.info
@@ -165,6 +165,7 @@ def remove_old_vm(vm_name, client)
   end
 end
 
+# metodo para pegar o status de um vm
 def get_status_vm(vm_name,client)
   vm_pool = VirtualMachinePool.new(client, -1)
   rc = vm_pool.info
@@ -199,16 +200,27 @@ require 'opennebula'
 
 include OpenNebula
 
+
+
+##############################################################################
+# Main do Programa
+##############################################################################
+
+# dados para iniciar a conexao
 client = Client.new(CREDENTIALS, ENDPOINT)
 
-
-
+# variavel que liga DEAMON
 rodar = 1
+
+# loop que simula o DEAMON
 while rodar == 1
   
+  # guarda as vms monitoradas pelo servico  
   vms_encontradas = Array.new
+  # guardar uma lista de vms com sua metrica de CPU
   vms_com_cpu_metricas = Array.new
 
+  # for usado para checar as metricars 
   for rodada in  1..QTD_CHECKS 
     # 2) Coleta os dados das vms
     vms_encontradas = get_vm_list(VM_NOME, client) 
@@ -238,7 +250,10 @@ while rodar == 1
     sleep(INTERVALO)
   end
 
+  # verifica se a lista de vms com suas metricas esta vazia
   if vms_com_cpu_metricas.length != 0
+    
+    #pega as metricas junto das vms
     vms_com_cpu_metricas.each do |vm_e_metrica|
       consumo_cpu = vm_e_metrica[1]
       vm_nome_antiga = vm_e_metrica[0]
@@ -246,33 +261,41 @@ while rodar == 1
       puts consumo_cpu.to_f
       puts vm_nome_antiga
       
+      # verifica se o consumo maximo foi alcancado e se a vm ja nao foi upgraded
       if (consumo_cpu.to_f > CPU_MAX.to_f) and (!vm_nome_antiga.include? "n1-")
+        
+        # cria nova vm com mais recurso
         vm_nome_nova = create_new_vm(VM_NOME+"n1-", TEMPLATE_N1, client)
         vm_status = ''
         
+        # verificar se ela ja subiu
         while vm_status != 'RUNNING'
           vm_status  = get_status_vm(vm_nome_nova, client)
           sleep(10)
         end
-        # maquina removida quando a nova estiver ok.
+
+        # maquina antiga removida quando a nova estiver ok
         remove_old_vm(vm_nome_antiga,client)
       else
         puts "Nao foi necessario elevar a VM."
       end
 
+      # verifica se o consumo minimo foi alcancado e se a vm ja nao foi downgraded
       if (consumo_cpu.to_f < CPU_MIN.to_f) and (vm_nome_antiga.include? "n1-")
+        
+        # cria a nova vm 
         vm_nome_nova = create_new_vm(VM_NOME, TEMPLATE_O, client)
         vm_status = ''
         
+        # verifica o status da nova vm
         while vm_status != 'RUNNING'
           vm_status  = get_status_vm(vm_nome_nova, client)
           sleep(10)
         end
-        # maquina removida quando a nova estiver ok.
+        # maquina antiga removida quando a nova estiver ok.
         remove_old_vm(vm_nome_antiga,client)
       end
     end
   end
-
 end
 
