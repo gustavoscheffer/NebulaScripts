@@ -106,7 +106,7 @@ def get_vm_list(vm_name_pattern, client)
   end
   vm_pool.each do |vm|
     vm.info
-    r = Regexp.new(vm_nome_pattern)
+    r = Regexp.new(vm_name_pattern)
     #verificamos se ha vms do servico em questao, se nao tiver criar essa miseria
     if (!r.match(vm.name.to_s).nil?)
       vm_list.push(vm) 
