@@ -20,7 +20,7 @@ VM_NOME = "mysql-"
 QTD_CHECKS = 3
 
 # intervalo de cada check em minutos
-INTERVALO = 60
+INTERVALO = 20
 
 # Template original
 TEMPLATE_O = 'CONTEXT = [
@@ -164,19 +164,32 @@ client = Client.new(CREDENTIALS, ENDPOINT)
 
 rodar = 1
 while rodar == 1
-  for rodada in  1..QTD_CHECKS 
   
-    # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
+  vms_encontradas = Array.new
+  vms_com_cpu_metricas = Array.new()
+
+  for rodada in  1..QTD_CHECKS 
+    # 2) Coleta os dados das vms
     vms_encontradas = get_vm_list(VM_NOME, client) 
 
     if vms_encontradas.length == 0
       create_new_vm(VM_NOME, TEMPLATE_O, client)
       vms_encontradas = get_vm_list(VM_NOME, client)
     end
+    vms_com_cpu_metricas = get_cpu_value_by_vm(vms_encontradas)
     puts get_cpu_value_by_vm(vms_encontradas)
     puts '----'  
+    sleep(INTERVALO)
   end
-  sleep(INTERVALO)
+
+  if vm_com_metrica.length != 0
+    vms_com_cpu_metricas.each do |vm|
+      vm.each do |vm_e_metrica|
+        puts vm_e_metrica[1]
+      end
+    end
+  end
+
 end
 
 #puts " VALOR FINAL == #{get_cpu_value_by_vm(vms_encontradas)}"
@@ -186,13 +199,13 @@ end
 
 # vms_com_cpu_metricas = get_cpu_value_by_vm(vms_encontradas)
 
-# if vm_com_metrica.length != 0
-#   vms_com_cpu_metricas.each do |vm|
-#     vm.each do |vm_e_metrica|
+if vm_com_metrica.length != 0
+  vms_com_cpu_metricas.each do |vm|
+    vm.each do |vm_e_metrica|
 
-#     end
-#   end
-# end
+    end
+  end
+end
 
 
 puts get_cpu_value_by_vm(vms_encontradas)
