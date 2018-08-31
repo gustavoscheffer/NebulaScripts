@@ -10,6 +10,9 @@ CREDENTIALS = "oneadmin:opennebula"
 # XML_RPC endpoint where OpenNebula is listening
 ENDPOINT    = "http://localhost:2633/RPC2"
 
+# Qtd vms
+QTD_VMS = 3
+
 # treshold maximo de cpu
 CPU_MAX  = 20
 
@@ -209,15 +212,19 @@ while rodar == 1
     vms_encontradas = get_vm_list(VM_NOME, client) 
 
     if vms_encontradas.length == 0
-      create_new_vm(VM_NOME, TEMPLATE_O, client)
-
-      # tempo para ajustar o host que esta sendo criado...
-      puts "Nao constam vms para o servico..."
-      puts "Estamos criando uma agora mesmo"
-      sleep(60*5)
-      
-      vms_encontradas = get_vm_list(VM_NOME, client)
+      for new_vms in  1..QTD_VMS 
+        vm_status = ''
+        vm_nome_nova = create_new_vm(VM_NOME, TEMPLATE_O, client)
+        while vm_status != 'RUNNING'
+          vm_status  = get_status_vm(vm_nome_nova, client)
+          sleep(10)
+        end
+      end
     end
+
+    #vms encontradas
+    vms_encontradas = get_vm_list(VM_NOME, client)
+    
     vms_com_cpu_metricas = get_cpu_value_by_vm(vms_encontradas)
     puts get_cpu_value_by_vm(vms_encontradas)
     puts '----'  
