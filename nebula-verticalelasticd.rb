@@ -83,6 +83,7 @@ def create_new_vm(new_name, template, client)
   if OpenNebula.is_error?(rc)
       STDERR.puts rc.message
       exit(-1)
+  end    
   #renomeia    
   rc = vm.rename(new_name + vm.id.to_s)
   if OpenNebula.is_error?(rc)
