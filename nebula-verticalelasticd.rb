@@ -11,7 +11,7 @@ CREDENTIALS = "oneadmin:opennebula"
 ENDPOINT    = "http://localhost:2633/RPC2"
 
 # Qtd vms
-QTD_VMS = 3
+QTD_VMS = 2
 
 # treshold maximo de cpu
 CPU_MAX  = 20
@@ -222,6 +222,9 @@ while rodar == 1
       end
     end
 
+    #aguardar 3 minutos para pegar as metricas
+    sleep(3*60)
+    
     #vms encontradas
     vms_encontradas = get_vm_list(VM_NOME, client)
     
