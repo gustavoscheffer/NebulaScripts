@@ -146,10 +146,6 @@ client = Client.new(CREDENTIALS, ENDPOINT)
 
 
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
-
-  create_new_vm(VM_NOME, TEMPLATE_O, client)
-  create_new_vm(VM_NOME, TEMPLATE_O, client)
-
 vms_encontradas = get_vm_list(VM_NOME, client) 
 
 if vms_encontradas.length == 0
@@ -160,7 +156,10 @@ end
 
 
 vms_encontradas.each do |vm|
-  puts vm
+  cpu_object = vm.monitoring(['MONITORING/CPU'])
+  cpu_values = cpu_object.fetch('MONITORING/CPU')
+  puts cpu_values
+  puts '--------'
 end 
 
 
