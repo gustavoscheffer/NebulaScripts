@@ -133,7 +133,6 @@ end
 
 puts "v1 #{vm_pool}"
 puts "v2 #{vm_pool.info!}"
-puts vm_pool[0]
 
 # verifica se a lista de vms está vazia, se estiver cria uma maquina
 if (vm_pool.nil?)
