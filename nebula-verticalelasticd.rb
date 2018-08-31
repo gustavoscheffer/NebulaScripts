@@ -170,7 +170,7 @@ vms_encontradas.each do |vm|
     #puts last_value_cpu
     puts " "
     vm_com_metrica.push(vm.name)
-    vm_com_metrica.push(vm.last_value_cpu)
+    #vm_com_metrica.push(vm.last_value_cpu)
   end
 end 
 
