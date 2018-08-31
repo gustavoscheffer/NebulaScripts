@@ -174,7 +174,6 @@ def get_status_vm(vm_name,client)
       return vm.lcm_state_str
     end  
   end
-
 end
 
 ##############################################################################
@@ -217,21 +216,22 @@ while rodar == 1
         vm_nome_nova = create_new_vm(VM_NOME, TEMPLATE_O, client)
         while vm_status != 'RUNNING'
           vm_status  = get_status_vm(vm_nome_nova, client)
-          sleep(10)
+          sleep(60)
         end
       end
     end
 
-    #aguardar 3 minutos para pegar as metricas
-    sleep(3*60)
-    
+    #aguardar 1 minutos para pegar as metricas
+    sleep(60)
     #vms encontradas
     vms_encontradas = get_vm_list(VM_NOME, client)
     
     vms_com_cpu_metricas = get_cpu_value_by_vm(vms_encontradas)
+
     puts get_cpu_value_by_vm(vms_encontradas)
     puts '----'  
     puts ''
+    
     sleep(INTERVALO)
   end
 
@@ -250,7 +250,7 @@ while rodar == 1
         
         while vm_status != 'RUNNING'
           vm_status  = get_status_vm(vm_nome_nova, client)
-          sleep(10)
+          sleep(60)
         end
         # maquina removida quando a nova estiver ok.
         remove_old_vm(vm_nome_antiga)
