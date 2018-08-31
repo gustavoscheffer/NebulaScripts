@@ -132,7 +132,8 @@ end
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 
 puts "v1 #{vm_pool}"
-puts "v2 #{vm_pool.info!}"
+teste = vm_pool.info!
+puts "v2 #{teste.to_s}"
 
 # verifica se a lista de vms está vazia, se estiver cria uma maquina
 if (vm_pool.nil?)
