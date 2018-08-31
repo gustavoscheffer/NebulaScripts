@@ -133,7 +133,7 @@ end
 
 puts "v1 #{vm_pool}"
 teste = vm_pool.info!
-puts "v2 #{teste.to_s}"
+puts "v2 #{teste.class}"
 
 # verifica se a lista de vms está vazia, se estiver cria uma maquina
 if (vm_pool.nil?)
@@ -153,7 +153,7 @@ end
 
 # iterar na lista de vms encontradas
 vm_pool.each do |vm|
-  puts vm.to_s
+  puts vm.class
 end
 
 
