@@ -10,19 +10,19 @@ CREDENTIALS = "oneadmin:opennebula"
 # XML_RPC endpoint where OpenNebula is listening
 ENDPOINT    = "http://localhost:2633/RPC2"
 
-# Qtd vms
+# Total de vms para o servico
 QTD_VMS = 2
 
 # treshold maximo de cpu
 CPU_MAX  = 20
 
-# nome da vm no padrao nome-
+# nome do servico. Usar o padrao "nonme-""
 VM_NOME = "mysql-"
 
 # Vezes em que deve ser ultrapassado o limite maximo de cpu
 QTD_CHECKS = 3
 
-# intervalo de cada check em minutos
+# intervalo de cada check em segundos
 INTERVALO = 20
 
 # Template original
@@ -253,7 +253,7 @@ while rodar == 1
           sleep(60)
         end
         # maquina removida quando a nova estiver ok.
-        remove_old_vm(vm_nome_antiga)
+        remove_old_vm(vm_nome_antiga,client)
       end
     end
   end
