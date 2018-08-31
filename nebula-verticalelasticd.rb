@@ -88,7 +88,12 @@ def create_new_vm(new_name, template, client)
   rc = vm.rename(new_name + vm.id.to_s)
   if OpenNebula.is_error?(rc)
     STDERR.puts rc.message
-    exit(-1)
+    #deleta vm se nao renomeia
+    rc = vm.delete
+    if OpenNebula.is_error?(rc)
+      STDERR.puts rc.message
+      exit(-1)
+    end
   else
     puts "VM #{new_name + vm.id.to_s} criada com sucesso!"
   end
