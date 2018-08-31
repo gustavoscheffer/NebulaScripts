@@ -239,13 +239,13 @@ while rodar == 1
         vm_status = ''
         
         while vm_status != 'RUNNING'
-          get_status_vm(vm_nome_nova, client)
+          vm_status  = get_status_vm(vm_nome_nova, client)
+          sleep(10)
         end
         # maquina removida quando a nova estiver ok.
         remove_old_vm(vm_nome_antiga)
       end
-    
-      end
+    end
   end
 
 end
