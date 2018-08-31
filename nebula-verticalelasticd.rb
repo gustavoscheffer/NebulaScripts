@@ -165,8 +165,8 @@ vms_encontradas.each do |vm|
     cpu_values = cpu_object.fetch('MONITORING/CPU')
      
     puts cpu_object
+    puts cpu_values[cpu_values.length() -1][1].to_f
     puts "+++++++"
-    #ast_value_cpu  = cpu_values[cpu_values.length() -1][1].to_f
     #puts last_value_cpu
     puts " "
     vm_com_metrica.push(vm.name)
