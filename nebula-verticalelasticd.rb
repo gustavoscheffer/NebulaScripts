@@ -153,7 +153,14 @@ end
 
 # iterar na lista de vms encontradas
 vm_pool.each do |vm|
-  puts vm.class
+  vm.info
+  r = Regexp.new(VM_NOME)
+  #verificamos se ha vms do servico em questao, se nao tiver criar essa miseria
+  if (r.match(vm.name.to_s).nil?)
+    #puts "passei no create, pois nao tinha vm para o servico"
+    #create_new_vm(VM_NOME, TEMPLATE_O, client)
+    puts "Teste foi vc"
+  end
 end
 
 
