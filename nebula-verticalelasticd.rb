@@ -153,8 +153,7 @@ end
 
 # iterar na lista de vms encontradas
 vm_pool.each do |vm|
-  vm.info
-  puts vm.name
+  puts vm
 end
 
 
