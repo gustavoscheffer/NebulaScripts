@@ -166,7 +166,7 @@ vms_encontradas.each do |vm|
     last_value_cpu  = cpu_values[cpu_values.length() -1][1].to_f
     puts cpu_object
     puts "+++++++"
-    puts last_value
+    puts last_value_cpu
     puts " "
     vm_com_metrica.push(vm.name)
     vm_com_metrica.push(vm.last_value_cpu)
