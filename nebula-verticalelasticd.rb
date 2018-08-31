@@ -94,8 +94,28 @@ def create_new_vm(new_name, template, client)
   end
 end
 
-def remove_old_vm()
+def get_vm_list(vm_name_pattern, client)
+  vm_list = Array.new
   
+  vm_pool = VirtualMachinePool.new(client, -1)
+  #controla se houve erro na request
+  rc = vm_pool.info
+  if OpenNebula.is_error?(rc)
+       puts rc.message
+       exit -1
+  end
+  vm_pool.each do |vm|
+    vm.info
+    r = Regexp.new(vm_nome_pattern)
+    #verificamos se ha vms do servico em questao, se nao tiver criar essa miseria
+    if (!r.match(vm.name.to_s).nil?)
+      vm_list.push(vm) 
+    end
+  end
+  return vm_list
+end
+
+def remove_old_vm()
 end
 
 ##############################################################################
@@ -120,48 +140,45 @@ include OpenNebula
 
 client = Client.new(CREDENTIALS, ENDPOINT)
 
-# 1) Pegar lista de máquinas existentes;
-vm_pool = VirtualMachinePool.new(client, -1)
-#controla se houve erro na request
-rc = vm_pool.info
-if OpenNebula.is_error?(rc)
-     puts rc.message
-     exit -1
-end
 
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 
-puts "v1 #{vm_pool}"
-teste = vm_pool.info!
-puts "v2 #{teste.class}"
+vms_encontradas = get_vm_list(VM_NOME, client) 
 
-# verifica se a lista de vms está vazia, se estiver cria uma maquina
-if (vm_pool.nil?)
-  
-  puts "Nenhuma VM foi encontrada no Nebuloso!" 
-  puts "vou criar agora mesmo"
+if vms_encontradas.length == 0
   create_new_vm(VM_NOME, TEMPLATE_O, client)
-  
-  vm_pool = VirtualMachinePool.new(client, -1)
-  #controla se houve erro na request
-  rc = vm_pool.info
-  if OpenNebula.is_error?(rc)
-     puts rc.message
-     exit -1
-  end
+  vms_encontradas = get_vm_list(VM_NOME, client)
 end
 
-# iterar na lista de vms encontradas
-vm_pool.each do |vm|
-  vm.info
-  r = Regexp.new(VM_NOME)
-  #verificamos se ha vms do servico em questao, se nao tiver criar essa miseria
-  if (r.match(vm.name.to_s).nil?)
-    #puts "passei no create, pois nao tinha vm para o servico"
-    #create_new_vm(VM_NOME, TEMPLATE_O, client)
-    puts "Teste foi vc"
-  end
-end
+puts vms_encontradas
+
+
+
+
+# # iterar na lista de vms encontradas
+# vm_pool.each do |vm|
+#   vm.info
+#   r = Regexp.new(VM_NOME)
+#   #verificamos se ha vms do servico em questao, se nao tiver criar essa miseria
+#   if (r.match(vm.name.to_s).nil?)
+#     vms_encontradas = vm
+#   end
+# end
+
+# if (vms_encontradas.length == 0)
+#   puts "Nenhuma VM foi encontrada no Nebuloso!" 
+#   puts "vou criar agora mesmo"
+#   create_new_vm(VM_NOME, TEMPLATE_O, client)
+#   vm_pool = VirtualMachinePool.new(client, -1)
+#   #controla se houve erro na request
+#   rc = vm_pool.info
+#   if OpenNebula.is_error?(rc)
+#      puts rc.message
+#      exit -1
+#   end  
+# end
+
+
 
 
 # vm_pool.each do |vm|
