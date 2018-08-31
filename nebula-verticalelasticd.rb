@@ -83,20 +83,18 @@ def create_new_vm(new_name, template, client)
   if OpenNebula.is_error?(rc)
       STDERR.puts rc.message
       exit(-1)
+  #renomeia    
+  rc = vm.rename(new_name + vm.id.to_s)
+  if OpenNebula.is_error?(rc)
+    STDERR.puts rc.message
+    exit(-1)
   else
-    rc = vm.rename(new_name + vm.id.to_s)
-    if OpenNebula.is_error?(rc)
-      STDERR.puts rc.message
-      exit(-1)
-    else
-      puts "VM #{new_name + vm.id.to_s} criada com sucesso!"
-    end
+    puts "VM #{new_name + vm.id.to_s} criada com sucesso!"
   end
 end
 
 def get_vm_list(vm_name_pattern, client)
   vm_list = Array.new
-  
   vm_pool = VirtualMachinePool.new(client, -1)
   #controla se houve erro na request
   rc = vm_pool.info
