@@ -163,11 +163,11 @@ vms_encontradas.each do |vm|
   if ((vm.lcm_state_str <=> 'RUNNING') == 0)
     cpu_object = vm.monitoring(['MONITORING/CPU'])
     cpu_values = cpu_object.fetch('MONITORING/CPU')
-    
+     
     puts cpu_object
     puts "+++++++"
-    last_value_cpu  = cpu_values[cpu_values.length() -1][1].to_f
-    puts last_value_cpu
+    #ast_value_cpu  = cpu_values[cpu_values.length() -1][1].to_f
+    #puts last_value_cpu
     puts " "
     vm_com_metrica.push(vm.name)
     vm_com_metrica.push(vm.last_value_cpu)
