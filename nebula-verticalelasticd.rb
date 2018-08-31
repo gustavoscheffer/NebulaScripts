@@ -20,7 +20,7 @@ VM_NOME = "mysql-"
 QTD_CHECKS = 3
 
 # intervalo de cada check em minutos
-INTERVALO = 1
+INTERVALO = 60
 
 # Template original
 TEMPLATE_O = 'CONTEXT = [
@@ -160,6 +160,8 @@ include OpenNebula
 
 client = Client.new(CREDENTIALS, ENDPOINT)
 
+
+
 rodar = 1
 while rodar == 1
   for rodada in  1..QTD_CHECKS 
@@ -174,9 +176,10 @@ while rodar == 1
     puts get_cpu_value_by_vm(vms_encontradas)
     puts '----'  
   end
-  puts " VALOR FINAL == #{get_cpu_value_by_vm(vms_encontradas)}"
-  sleep(INTERVALO.minutes)
+  sleep(INTERVALO)
 end
+
+#puts " VALOR FINAL == #{get_cpu_value_by_vm(vms_encontradas)}"
 
 
 
