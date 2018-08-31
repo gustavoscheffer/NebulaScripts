@@ -131,6 +131,9 @@ end
 
 # 2) Filtrar as máquinas pelo nome e montar uma nova lista;
 
+puts "v1 #{vm_pool}"
+puts "v2 #{vm_pool.info!}"
+
 # verifica se a lista de vms está vazia, se estiver cria uma maquina
 if ((vm_pool<=>'') == 0)
   puts "Nenhuma VM foi encontrada no Nebuloso!" 
