@@ -221,6 +221,7 @@ while rodar == 1
     vms_com_cpu_metricas = get_cpu_value_by_vm(vms_encontradas)
     puts get_cpu_value_by_vm(vms_encontradas)
     puts '----'  
+    puts ''
     sleep(INTERVALO)
   end
 
@@ -231,7 +232,7 @@ while rodar == 1
         consumo_cpu = vm_e_metrica[1]
         vm_nome_antiga = vm_e_metrica[0]
         
-        if consumo_cpu > CPU_MAX 
+        if consumo_cpu.to_f > CPU_MAX 
           
           vm_nome_nova = create_new_vm(VM_NOME, TEMPLATE_N1, client)
           vm_status = ''
